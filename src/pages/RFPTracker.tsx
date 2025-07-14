@@ -194,7 +194,6 @@ export default function RFPTracker() {
   };
 
   const selectedRFPData = filteredRFPs.find(r => r.id === selectedRFP);
-  const selectedRFPData = rfps.find(r => r.id === selectedRFP);
 
   const handleViewDetails = () => {
     setShowDetails(true);
