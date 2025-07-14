@@ -63,10 +63,10 @@ export default function AgenticInterface({
       "Identify areas needing attention"
     ],
     tracker: [
-      "Show me overdue RFPs",
-      "What's the average response time?",
-      "Which RFPs need follow-up?",
-      "Analyze RFP success rates"
+      "Analyze this RFP's progress and timeline",
+      "What are the key risks for this RFP?",
+      "Compare supplier responses and recommendations",
+      "Generate RFP performance summary"
     ],
     scoring: [
       "Rank suppliers by performance",
@@ -79,6 +79,12 @@ export default function AgenticInterface({
       "Show compliance status summary",
       "What are the next deadlines?",
       "Help with document submission"
+    ],
+    communications: [
+      "Summarize recent communications",
+      "Draft follow-up message to suppliers",
+      "Analyze response patterns",
+      "Suggest next communication steps"
     ]
   };
 
@@ -98,6 +104,7 @@ export default function AgenticInterface({
       case 'rfp':
       case 'tracker':
       case 'scoring':
+      case 'communications':
         return documentAgent;
       default:
         return complianceAgent;

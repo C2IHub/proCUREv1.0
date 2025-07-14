@@ -52,10 +52,56 @@ function App() {
                   <Route path="/supplier/:id/portal" element={<SupplierPortal />} />
                 </Routes>
               </main>
-              <AgenticInterface 
-                context="global"
-                contextData={{}}
-              />
+              <Routes>
+                <Route path="/" element={
+                  <AgenticInterface 
+                    context="compliance"
+                    contextData={{}}
+                  />
+                } />
+                <Route path="/supplier-tracker" element={
+                  <AgenticInterface 
+                    context="supplier"
+                    contextData={{}}
+                  />
+                } />
+                <Route path="/rfp-wizard" element={
+                  <AgenticInterface 
+                    context="rfp"
+                    contextData={{}}
+                  />
+                } />
+                <Route path="/rfp-tracker" element={
+                  <AgenticInterface 
+                    context="tracker"
+                    contextData={{}}
+                  />
+                } />
+                <Route path="/audit-trail" element={
+                  <AgenticInterface 
+                    context="audit"
+                    contextData={{}}
+                  />
+                } />
+                <Route path="/settings" element={
+                  <AgenticInterface 
+                    context="compliance"
+                    contextData={{}}
+                  />
+                } />
+                <Route path="/supplier/:id/reasoning" element={
+                  <AgenticInterface 
+                    context="supplier"
+                    contextData={{}}
+                  />
+                } />
+                <Route path="/supplier/:id/portal" element={
+                  <AgenticInterface 
+                    context="portal"
+                    contextData={{}}
+                  />
+                } />
+              </Routes>
             </div>
           </Router>
         </SupplierProvider>

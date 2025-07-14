@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Search, 
   Filter, 
@@ -15,7 +15,6 @@ import {
   MessageSquare,
   Plus,
   MoreHorizontal,
-  X,
   ArrowLeft
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -39,10 +38,8 @@ interface RFPItem {
 export default function RFPTracker() {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
-  const [viewMode, setViewMode] = useState<'cards' | 'table'>('table');
   const [selectedRFP, setSelectedRFP] = useState<string>('RFP-2024-001'); // First RFP selected by default
-  const [showDetails, setShowDetails] = useState(false);
-  const [showCommunications, setShowCommunications] = useState(false);
+  const [currentView, setCurrentView] = useState<'list' | 'details' | 'communications'>('list');
   const navigate = useNavigate();
 
   // Mock RFP data - in real app, this would come from API
@@ -196,11 +193,15 @@ export default function RFPTracker() {
   const selectedRFPData = filteredRFPs.find(r => r.id === selectedRFP);
 
   const handleViewDetails = () => {
-    setShowDetails(true);
+    setCurrentView('details');
   };
 
   const handleCommunications = () => {
-    setShowCommunications(true);
+    setCurrentView('communications');
+  };
+
+  const handleBackToList = () => {
+    setCurrentView('list');
   };
 
   const handleExport = () => {
@@ -216,25 +217,33 @@ export default function RFPTracker() {
       window.URL.revokeObjectURL(url);
     }
   };
+
+  // Reset to list view when component mounts
+  useEffect(() => {
+    setCurrentView('list');
+  }, []);
+
   return (
     <div className="p-8">
-      {/* RFP Details Modal */}
-      {showDetails && selectedRFPData && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl shadow-xl max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto">
-            <div className="p-6 border-b border-gray-200">
-              <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-bold text-gray-900">RFP Details</h2>
-                <button
-                  onClick={() => setShowDetails(false)}
-                  className="p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100"
-                >
-                  <X className="h-5 w-5" />
-                </button>
-              </div>
+      {/* RFP Details View */}
+      {currentView === 'details' && selectedRFPData && (
+        <div className="space-y-6">
+          {/* Header */}
+          <div className="mb-6">
+            <div className="flex items-center mb-4">
+              <button 
+                onClick={handleBackToList}
+                className="flex items-center text-blue-600 hover:text-blue-800 mr-4"
+              >
+                <ArrowLeft className="h-4 w-4 mr-1" /> Back to RFP List
+              </button>
             </div>
-            
-            <div className="p-6 space-y-6">
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">RFP Details</h1>
+            <p className="text-gray-600">{selectedRFPData.title}</p>
+          </div>
+
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
+            <div className="space-y-6">
               {/* Basic Info */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div>
@@ -347,19 +356,15 @@ export default function RFPTracker() {
                 </div>
               </div>
             </div>
-            
-            <div className="p-6 border-t border-gray-200 bg-gray-50">
+
+            {/* Action Buttons */}
+            <div className="mt-8 pt-6 border-t border-gray-200">
               <div className="flex justify-end space-x-3">
-                <button
-                  onClick={() => setShowDetails(false)}
-                  className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
-                >
-                  Close
-                </button>
                 <button
                   onClick={handleExport}
                   className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
                 >
+                  <Download className="h-4 w-4 mr-2 inline" />
                   Export Details
                 </button>
               </div>
@@ -368,26 +373,27 @@ export default function RFPTracker() {
         </div>
       )}
       
-      {/* Communications Modal */}
-      {showCommunications && selectedRFPData && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl shadow-xl max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto">
-            <div className="p-6 border-b border-gray-200">
-              <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-bold text-gray-900">RFP Communications</h2>
-                <button
-                  onClick={() => setShowCommunications(false)}
-                  className="p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100"
-                >
-                  <X className="h-5 w-5" />
-                </button>
-              </div>
-              <p className="text-gray-600 mt-2">Communication history for {selectedRFPData.title}</p>
+      {/* Communications View */}
+      {currentView === 'communications' && selectedRFPData && (
+        <div className="space-y-6">
+          {/* Header */}
+          <div className="mb-6">
+            <div className="flex items-center mb-4">
+              <button 
+                onClick={handleBackToList}
+                className="flex items-center text-blue-600 hover:text-blue-800 mr-4"
+              >
+                <ArrowLeft className="h-4 w-4 mr-1" /> Back to RFP List
+              </button>
             </div>
-            
-            <div className="p-6">
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">RFP Communications</h1>
+            <p className="text-gray-600">Communication history for {selectedRFPData.title}</p>
+          </div>
+
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
+            <div className="space-y-6">
               {/* Communication Timeline */}
-              <div className="space-y-4">
+              <div className="space-y-6">
                 <div className="border border-gray-200 rounded-lg p-4">
                   <div className="flex items-start space-x-3">
                     <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
@@ -442,45 +448,15 @@ export default function RFPTracker() {
                   </div>
                 </div>
               </div>
-              
-              {/* Quick Actions */}
-              <div className="mt-6 pt-6 border-t border-gray-200">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <button className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 text-left">
-                    <Send className="h-5 w-5 text-blue-600 mb-2" />
-                    <div className="font-medium text-gray-900">Send Update</div>
-                    <div className="text-sm text-gray-600">Notify all suppliers</div>
-                  </button>
-                  <button className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 text-left">
-                    <MessageSquare className="h-5 w-5 text-green-600 mb-2" />
-                    <div className="font-medium text-gray-900">Send Reminder</div>
-                    <div className="text-sm text-gray-600">Deadline reminder</div>
-                  </button>
-                  <button className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 text-left">
-                    <FileText className="h-5 w-5 text-purple-600 mb-2" />
-                    <div className="font-medium text-gray-900">Share Document</div>
-                    <div className="text-sm text-gray-600">Additional materials</div>
-                  </button>
-                </div>
-              </div>
-            </div>
-            
-            <div className="p-6 border-t border-gray-200 bg-gray-50">
-              <div className="flex justify-end">
-                <button
-                  onClick={() => setShowCommunications(false)}
-                  className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
-                >
-                  Close
-                </button>
-              </div>
             </div>
           </div>
         </div>
       )}
+
       {/* Header */}
-      <div className="mb-6">
+      {currentView === 'list' && (
+        <>
+          <div className="mb-6">
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-gray-900 mb-2">RFP Tracker</h1>
@@ -497,7 +473,7 @@ export default function RFPTracker() {
       </div>
 
       {/* Summary Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
           <div className="flex items-center justify-between mb-4">
             <div className="p-2 bg-blue-50 rounded-lg">
@@ -714,6 +690,9 @@ export default function RFPTracker() {
           </button>
         </div>
       )}
+        </>
+      )}
+
     </div>
   );
 }
