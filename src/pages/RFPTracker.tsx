@@ -194,6 +194,7 @@ export default function RFPTracker() {
   };
 
   const selectedRFPData = filteredRFPs.find(r => r.id === selectedRFP);
+  const selectedRFPData = rfps.find(r => r.id === selectedRFP);
 
   const handleViewDetails = () => {
     setShowDetails(true);
@@ -586,7 +587,7 @@ export default function RFPTracker() {
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-sm font-medium text-gray-900">
-                  Selected: {filteredRFPs.find(r => r.id === selectedRFP)?.title}
+                  Selected: {rfps.find(r => r.id === selectedRFP)?.title}
                 </h3>
                 <p className="text-xs text-gray-600">Choose an action for this RFP</p>
               </div>

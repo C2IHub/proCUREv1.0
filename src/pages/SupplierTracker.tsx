@@ -192,7 +192,7 @@ const SupplierTracker: React.FC = () => {
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-sm font-medium text-gray-900">
-                  Selected: {filteredSuppliers.find(s => s.id === selectedSupplier)?.name}
+                  Selected: {mockSuppliers.find(s => s.id === selectedSupplier)?.name}
                 </h3>
                 <p className="text-xs text-gray-600">Choose an action for this supplier</p>
               </div>
