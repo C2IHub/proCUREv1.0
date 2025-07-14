@@ -14,7 +14,9 @@ import {
   TrendingUp,
   MessageSquare,
   Plus,
-  MoreHorizontal
+  MoreHorizontal,
+  X,
+  ArrowLeft
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import AgenticInterface from '../components/AgenticInterface';
@@ -39,6 +41,8 @@ export default function RFPTracker() {
   const [statusFilter, setStatusFilter] = useState('all');
   const [viewMode, setViewMode] = useState<'cards' | 'table'>('table');
   const [selectedRFP, setSelectedRFP] = useState<string>('RFP-2024-001'); // First RFP selected by default
+  const [showDetails, setShowDetails] = useState(false);
+  const [showCommunications, setShowCommunications] = useState(false);
   const navigate = useNavigate();
 
   // Mock RFP data - in real app, this would come from API
@@ -189,8 +193,292 @@ export default function RFPTracker() {
     return diffDays;
   };
 
+  const selectedRFPData = filteredRFPs.find(r => r.id === selectedRFP);
+
+  const handleViewDetails = () => {
+    setShowDetails(true);
+  };
+
+  const handleCommunications = () => {
+    setShowCommunications(true);
+  };
+
+  const handleExport = () => {
+    if (selectedRFPData) {
+      // Create a simple CSV export
+      const csvContent = `RFP ID,Title,Status,Deadline,Budget,Responses\n${selectedRFPData.id},"${selectedRFPData.title}",${selectedRFPData.status},${selectedRFPData.deadline},${selectedRFPData.budget},${selectedRFPData.responsesReceived}/${selectedRFPData.suppliersInvited}`;
+      const blob = new Blob([csvContent], { type: 'text/csv' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${selectedRFPData.id}_export.csv`;
+      a.click();
+      window.URL.revokeObjectURL(url);
+    }
+  };
   return (
     <div className="p-8">
+      {/* RFP Details Modal */}
+      {showDetails && selectedRFPData && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl shadow-xl max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <div className="p-6 border-b border-gray-200">
+              <div className="flex items-center justify-between">
+                <h2 className="text-2xl font-bold text-gray-900">RFP Details</h2>
+                <button
+                  onClick={() => setShowDetails(false)}
+                  className="p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+            </div>
+            
+            <div className="p-6 space-y-6">
+              {/* Basic Info */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Basic Information</h3>
+                  <div className="space-y-3">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-600">RFP ID</label>
+                      <p className="text-gray-900 font-mono">{selectedRFPData.id}</p>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-600">Title</label>
+                      <p className="text-gray-900">{selectedRFPData.title}</p>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-600">Categories</label>
+                      <div className="flex flex-wrap gap-2 mt-1">
+                        {selectedRFPData.categories.map((category, index) => (
+                          <span key={index} className="px-2 py-1 bg-blue-50 text-blue-700 text-sm rounded">
+                            {category}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-600">Status</label>
+                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium ${getStatusColor(selectedRFPData.status)}`}>
+                        {getStatusIcon(selectedRFPData.status)}
+                        <span className="ml-1">{formatStatus(selectedRFPData.status)}</span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Project Details</h3>
+                  <div className="space-y-3">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-600">Budget Range</label>
+                      <p className="text-gray-900">{selectedRFPData.budget}</p>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-600">Created Date</label>
+                      <p className="text-gray-900">{new Date(selectedRFPData.createdDate).toLocaleDateString()}</p>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-600">Deadline</label>
+                      <p className="text-gray-900">{new Date(selectedRFPData.deadline).toLocaleDateString()}</p>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-600">Priority</label>
+                      <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full capitalize ${getPriorityColor(selectedRFPData.priority)}`}>
+                        {selectedRFPData.priority}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Response Statistics */}
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Response Statistics</h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="bg-blue-50 p-4 rounded-lg">
+                    <div className="text-2xl font-bold text-blue-600">{selectedRFPData.suppliersInvited}</div>
+                    <div className="text-sm text-blue-600">Suppliers Invited</div>
+                  </div>
+                  <div className="bg-green-50 p-4 rounded-lg">
+                    <div className="text-2xl font-bold text-green-600">{selectedRFPData.responsesReceived}</div>
+                    <div className="text-sm text-green-600">Responses Received</div>
+                  </div>
+                  <div className="bg-purple-50 p-4 rounded-lg">
+                    <div className="text-2xl font-bold text-purple-600">{selectedRFPData.progress}%</div>
+                    <div className="text-sm text-purple-600">Progress</div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Progress Timeline */}
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Progress Timeline</h3>
+                <div className="space-y-3">
+                  <div className="flex items-center">
+                    <div className="w-4 h-4 bg-green-500 rounded-full mr-3"></div>
+                    <span className="text-sm text-gray-600">RFP Created - {new Date(selectedRFPData.createdDate).toLocaleDateString()}</span>
+                  </div>
+                  {selectedRFPData.status !== 'draft' && (
+                    <div className="flex items-center">
+                      <div className="w-4 h-4 bg-green-500 rounded-full mr-3"></div>
+                      <span className="text-sm text-gray-600">RFP Sent to Suppliers</span>
+                    </div>
+                  )}
+                  {selectedRFPData.responsesReceived > 0 && (
+                    <div className="flex items-center">
+                      <div className="w-4 h-4 bg-green-500 rounded-full mr-3"></div>
+                      <span className="text-sm text-gray-600">Responses Received ({selectedRFPData.responsesReceived})</span>
+                    </div>
+                  )}
+                  {selectedRFPData.status === 'evaluation' && (
+                    <div className="flex items-center">
+                      <div className="w-4 h-4 bg-blue-500 rounded-full mr-3"></div>
+                      <span className="text-sm text-gray-600">Evaluation in Progress</span>
+                    </div>
+                  )}
+                  {selectedRFPData.status === 'awarded' && (
+                    <div className="flex items-center">
+                      <div className="w-4 h-4 bg-green-500 rounded-full mr-3"></div>
+                      <span className="text-sm text-gray-600">RFP Awarded</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+            
+            <div className="p-6 border-t border-gray-200 bg-gray-50">
+              <div className="flex justify-end space-x-3">
+                <button
+                  onClick={() => setShowDetails(false)}
+                  className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
+                >
+                  Close
+                </button>
+                <button
+                  onClick={handleExport}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                >
+                  Export Details
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* Communications Modal */}
+      {showCommunications && selectedRFPData && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl shadow-xl max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <div className="p-6 border-b border-gray-200">
+              <div className="flex items-center justify-between">
+                <h2 className="text-2xl font-bold text-gray-900">RFP Communications</h2>
+                <button
+                  onClick={() => setShowCommunications(false)}
+                  className="p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+              <p className="text-gray-600 mt-2">Communication history for {selectedRFPData.title}</p>
+            </div>
+            
+            <div className="p-6">
+              {/* Communication Timeline */}
+              <div className="space-y-4">
+                <div className="border border-gray-200 rounded-lg p-4">
+                  <div className="flex items-start space-x-3">
+                    <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                      <Send className="h-4 w-4 text-blue-600" />
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between mb-1">
+                        <h4 className="font-medium text-gray-900">RFP Sent to Suppliers</h4>
+                        <span className="text-sm text-gray-500">2 days ago</span>
+                      </div>
+                      <p className="text-sm text-gray-600">RFP document sent to {selectedRFPData.suppliersInvited} suppliers</p>
+                      <div className="mt-2">
+                        <span className="text-xs text-gray-500">Recipients: Supplier A, Supplier B, Supplier C...</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="border border-gray-200 rounded-lg p-4">
+                  <div className="flex items-start space-x-3">
+                    <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                      <MessageSquare className="h-4 w-4 text-green-600" />
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between mb-1">
+                        <h4 className="font-medium text-gray-900">Response Received</h4>
+                        <span className="text-sm text-gray-500">1 day ago</span>
+                      </div>
+                      <p className="text-sm text-gray-600">Supplier A submitted their response</p>
+                      <div className="mt-2">
+                        <button className="text-xs text-blue-600 hover:text-blue-700">View Response →</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="border border-gray-200 rounded-lg p-4">
+                  <div className="flex items-start space-x-3">
+                    <div className="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center">
+                      <Clock className="h-4 w-4 text-yellow-600" />
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between mb-1">
+                        <h4 className="font-medium text-gray-900">Clarification Request</h4>
+                        <span className="text-sm text-gray-500">6 hours ago</span>
+                      </div>
+                      <p className="text-sm text-gray-600">Supplier B requested clarification on technical specifications</p>
+                      <div className="mt-2">
+                        <button className="text-xs text-blue-600 hover:text-blue-700">Respond →</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Quick Actions */}
+              <div className="mt-6 pt-6 border-t border-gray-200">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <button className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 text-left">
+                    <Send className="h-5 w-5 text-blue-600 mb-2" />
+                    <div className="font-medium text-gray-900">Send Update</div>
+                    <div className="text-sm text-gray-600">Notify all suppliers</div>
+                  </button>
+                  <button className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 text-left">
+                    <MessageSquare className="h-5 w-5 text-green-600 mb-2" />
+                    <div className="font-medium text-gray-900">Send Reminder</div>
+                    <div className="text-sm text-gray-600">Deadline reminder</div>
+                  </button>
+                  <button className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 text-left">
+                    <FileText className="h-5 w-5 text-purple-600 mb-2" />
+                    <div className="font-medium text-gray-900">Share Document</div>
+                    <div className="text-sm text-gray-600">Additional materials</div>
+                  </button>
+                </div>
+              </div>
+            </div>
+            
+            <div className="p-6 border-t border-gray-200 bg-gray-50">
+              <div className="flex justify-end">
+                <button
+                  onClick={() => setShowCommunications(false)}
+                  className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
       {/* Header */}
       <div className="mb-6">
         <div className="flex items-center justify-between">
@@ -304,14 +592,17 @@ export default function RFPTracker() {
               </div>
               <div className="flex space-x-3">
                 <button className="flex items-center px-3 py-1.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm">
+                  onClick={handleViewDetails}
                   <Eye className="h-4 w-4 mr-2" />
                   View Details
                 </button>
                 <button className="flex items-center px-3 py-1.5 border border-gray-300 text-gray-700 bg-white rounded-lg hover:bg-gray-50 text-sm">
+                  onClick={handleCommunications}
                   <MessageSquare className="h-4 w-4 mr-2" />
                   Communications
                 </button>
                 <button className="flex items-center px-3 py-1.5 border border-gray-300 text-gray-700 bg-white rounded-lg hover:bg-gray-50 text-sm">
+                  onClick={handleExport}
                   <Download className="h-4 w-4 mr-2" />
                   Export
                 </button>
