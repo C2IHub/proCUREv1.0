@@ -1,10 +1,8 @@
 import React, { useState, useMemo } from 'react';
-import { History, Search, Filter, Download, Eye, User, Bot, FileText, CheckCircle, AlertTriangle, Clock } from 'lucide-react';
 import { useAuditEvents } from '../hooks/useApi';
 import AgenticInterface from '../components/AgenticInterface';
 
 export default function AuditTrail() {
-  const [selectedFilter, setSelectedFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -14,12 +12,10 @@ export default function AuditTrail() {
     if (!auditData?.data) return [];
     
     return auditData.data.filter(event => {
-      const matchesFilter = selectedFilter === 'all' || event.type === selectedFilter;
       const matchesSearch = event.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
                            (event.supplierName?.toLowerCase().includes(searchTerm.toLowerCase()));
-      return matchesFilter && matchesSearch;
+      return matchesSearch;
     });
-  }, [auditData?.data, selectedFilter, searchTerm]);
 
   const getImpactColor = (severity: string) => {
     switch (severity) {
@@ -90,46 +86,18 @@ export default function AuditTrail() {
         <p className="text-gray-600">Complete history of AI decisions and human interventions</p>
       </div>
 
-      {/* Filters */}
+      {/* Search */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <div className="flex items-center space-x-2">
-              <Filter className="h-5 w-5 text-gray-400" />
-              <span className="text-sm font-medium text-gray-700">Filter by type:</span>
-            </div>
-            <div className="flex space-x-2">
-              {['all', 'compliance_check', 'risk_assessment', 'document_upload', 'alert'].map((filter) => (
-                <button
-                  key={filter}
-                  onClick={() => setSelectedFilter(filter)}
-                  className={`px-4 py-2 text-sm font-medium rounded-lg capitalize transition-colors ${
-                    selectedFilter === filter
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
-                >
-                  {filter.replace('_', ' ')}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="flex items-center space-x-4">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Search events..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-            </div>
-            <button className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-              <Download className="h-4 w-4 mr-2" />
-              Export
-            </button>
+        <div className="flex items-center space-x-4">
+          <div className="flex-1 relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+            <input
+              type="text"
+              placeholder="Search audit events..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
           </div>
         </div>
       </div>
