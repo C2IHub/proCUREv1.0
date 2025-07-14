@@ -250,7 +250,6 @@ const SupplierTracker: React.FC = () => {
                   onClick={() => setSelectedSupplier(supplier.id)}
                   className={`cursor-pointer hover:bg-gray-50 ${
                     selectedSupplier === supplier.id ? 'bg-blue-50 border-l-4 border-blue-500' : ''
-                  onClick={handleViewPortal}
                   }`}
                 >
                   <td className="px-6 py-4 whitespace-nowrap">
