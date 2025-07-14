@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>proCURE - Application Design Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f8fafc;
+        }
+        
+        .document-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        
+        .cover-page {
+            padding: 80px 60px;
+            text-align: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            page-break-after: always;
+        }
+        
+        .cover-page h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            letter-spacing: -2px;
+        }
+        
+        .cover-page .subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+        
+        .cover-page .description {
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto 60px;
+            opacity: 0.8;
+        }
+        
+        .cover-page .meta {
+            font-size: 1rem;
+            opacity: 0.7;
+        }
+        
+        .section {
+            padding: 60px;
+            page-break-before: always;
+        }
+        
+        .section h2 {
+            font-size: 2.5rem;
+            color: #1e293b;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #3b82f6;
+            padding-bottom: 15px;
+        }
+        
+        .section h3 {
+            font-size: 1.8rem;
+            color: #334155;
+            margin: 40px 0 20px 0;
+        }
+        
+        .section p {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            color: #64748b;
+        }
+        
+        .screen-showcase {
+            margin: 40px 0;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            overflow: hidden;
+            background: white;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        
+        .screen-header {
+            background: #f1f5f9;
+            padding: 20px 30px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .screen-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 8px;
+        }
+        
+        .screen-description {
+            color: #64748b;
+            font-size: 1rem;
+        }
+        
+        .screen-content {
+            padding: 30px;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 30px 0;
+        }
+        
+        .feature-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 25px;
+        }
+        
+        .feature-card h4 {
+            font-size: 1.2rem;
+            color: #1e293b;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .feature-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            background: #3b82f6;
+            border-radius: 4px;
+        }
+        
+        .feature-card p {
+            font-size: 0.95rem;
+            color: #64748b;
+            margin: 0;
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .metric-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 8px;
+        }
+        
+        .metric-label {
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+        
+        .workflow-step {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 25px;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .workflow-step::before {
+            content: attr(data-step);
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            background: #3b82f6;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .workflow-step h4 {
+            font-size: 1.3rem;
+            color: #1e293b;
+            margin-bottom: 12px;
+            margin-top: 10px;
+        }
+        
+        .tech-stack {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .tech-category {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+        }
+        
+        .tech-category h4 {
+            font-size: 1.1rem;
+            color: #1e293b;
+            margin-bottom: 15px;
+        }
+        
+        .tech-list {
+            list-style: none;
+        }
+        
+        .tech-list li {
+            padding: 5px 0;
+            color: #64748b;
+            font-size: 0.95rem;
+        }
+        
+        .tech-list li::before {
+            content: "→";
+            color: #3b82f6;
+            margin-right: 8px;
+        }
+        
+        .ai-agent-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 20px 0;
+        }
+        
+        .ai-agent-card h4 {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+        }
+        
+        .ai-agent-card p {
+            opacity: 0.9;
+            margin: 0;
+        }
+        
+        .compliance-matrix {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 30px 0;
+        }
+        
+        .compliance-matrix table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .compliance-matrix th,
+        .compliance-matrix td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .compliance-matrix th {
+            background: #f1f5f9;
+            font-weight: 600;
+            color: #1e293b;
+        }
+        
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .status-compliant {
+            background: #dcfce7;
+            color: #166534;
+        }
+        
+        .status-warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        .status-critical {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        
+        .toc {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+        
+        .toc h3 {
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+        
+        .toc ul {
+            list-style: none;
+        }
+        
+        .toc li {
+            padding: 8px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .toc li:last-child {
+            border-bottom: none;
+        }
+        
+        .toc a {
+            color: #3b82f6;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .toc a:hover {
+            text-decoration: underline;
+        }
+        
+        @media print {
+            .section {
+                page-break-before: always;
+            }
+            
+            .screen-showcase {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="document-container">
+        <!-- Cover Page -->
+        <div class="cover-page">
+            <h1>proCURE</h1>
+            <div class="subtitle">AI-Powered Pharmaceutical Procurement Platform</div>
+            <div class="description">
+                Comprehensive design documentation showcasing the complete user interface and experience 
+                for the next-generation pharmaceutical supplier compliance and procurement management system.
+            </div>
+            <div class="meta">
+                Design Document v1.0<br>
+                Generated: January 2024
+            </div>
+        </div>
+
+        <!-- Table of Contents -->
+        <div class="section">
+            <h2>Table of Contents</h2>
+            <div class="toc">
+                <ul>
+                    <li><a href="#overview">1. Platform Overview</a></li>
+                    <li><a href="#dashboard">2. Compliance Command Center</a></li>
+                    <li><a href="#supplier-intelligence">3. Supplier Intelligence</a></li>
+                    <li><a href="#risk-management">4. Risk Management</a></li>
+                    <li><a href="#rfp-generator">5. RFP Generator</a></li>
+                    <li><a href="#rfp-tracker">6. RFP Tracker</a></li>
+                    <li><a href="#ai-reasoning">7. AI Reasoning & Explainability</a></li>
+                    <li><a href="#supplier-portal">8. Supplier Collaboration Portal</a></li>
+                    <li><a href="#audit-trail">9. Audit Trail</a></li>
+                    <li><a href="#architecture">10. Technical Architecture</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Platform Overview -->
+        <div class="section" id="overview">
+            <h2>1. Platform Overview</h2>
+            <p>proCURE is a revolutionary AI-powered pharmaceutical procurement platform that transforms how life sciences companies manage supplier compliance, risk assessment, and procurement processes. Built with cutting-edge technology and pharmaceutical industry expertise, it provides comprehensive solutions for regulatory compliance, supplier intelligence, and automated decision-making.</p>
+
+            <h3>Key Value Propositions</h3>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4><div class="feature-icon"></div>AI-Driven Compliance</h4>
+                    <p>Automated compliance monitoring with AWS Bedrock agents analyzing EU GMP, FDA, and global regulatory requirements in real-time.</p>
+                </div>
+                <div class="feature-card">
+                    <h4><div class="feature-icon"></div>Predictive Risk Assessment</h4>
+                    <p>Multi-layered risk analysis combining financial, operational, quality, and regulatory factors with predictive modeling.</p>
+                </div>
+                <div class="feature-card">
+                    <h4><div class="feature-icon"></div>Intelligent RFP Generation</h4>
+                    <p>AI-powered RFP creation with automatic compliance requirement mapping and supplier matching algorithms.</p>
+                </div>
+                <div class="feature-card">
+                    <h4><div class="feature-icon"></div>Real-time Collaboration</h4>
+                    <p>Secure supplier portals with document management, communication tools, and automated workflow orchestration.</p>
+                </div>
+            </div>
+
+            <h3>Target Users</h3>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4><div class="feature-icon"></div>Compliance Managers</h4>
+                    <p>Monitor regulatory compliance across global supplier networks with automated alerts and comprehensive reporting.</p>
+                </div>
+                <div class="feature-card">
+                    <h4><div class="feature-icon"></div>Procurement Teams</h4>
+                    <p>Streamline RFP processes, supplier evaluation, and contract management with AI-powered insights and automation.</p>
+                </div>
+                <div class="feature-card">
+                    <h4><div class="feature-icon"></div>Quality Assurance</h4>
+                    <p>Ensure supplier quality standards with continuous monitoring, audit management, and risk mitigation strategies.</p>
+                </div>
+                <div class="feature-card">
+                    <h4><div class="feature-icon"></div>Executive Leadership</h4>
+                    <p>Strategic oversight with executive dashboards, KPI tracking, and comprehensive analytics for informed decision-making.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Compliance Command Center -->
+        <div class="section" id="dashboard">
+            <h2>2. Compliance Command Center</h2>
+            
+            <div class="screen-showcase">
+                <div class="screen-header">
+                    <div class="screen-title">Main Dashboard</div>
+                    <div class="screen-description">Central hub for real-time compliance monitoring and AI agent activity</div>
+                </div>
+                <div class="screen-content">
+                    <h3>Key Performance Metrics</h3>
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <div class="metric-value">3</div>
+                            <div class="metric-label">Critical Alerts</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-value">847</div>
+                            <div class="metric-label">Compliant Suppliers</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-value">23</div>
+                            <div class="metric-label">Pending Reviews</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-value">91.2%</div>
+                            <div class="metric-label">Avg. Compliance Score</div>
+                        </div>
+                    </div>
+
+                    <h3>Core Features</h3>
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <h4><div class="feature-icon"></div>Real-time Monitoring</h4>
+                            <p>Live compliance status updates with automated alert generation for critical issues requiring immediate attention.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4><div class="feature-icon"></div>Trend Analysis</h4>
+                            <p>Historical compliance trends with predictive analytics to identify potential future compliance risks.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4><div class="feature-icon"></div>AI Agent Status</h4>
+                            <p>Monitor active AI agents processing compliance data, risk assessments, and document validations.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4><div class="feature-icon"></div>Quick Actions</h4>
+                            <p>One-click access to frequently used functions like RFP creation, supplier analysis, and risk management.</p>
+                        </div>
+                    </div>
+
+                    <h3>Active AI Agents</h3>
+                    <div class="ai-agent-card">
+                        <h4>EU GMP Compliance Analyzer</h4>
+                        <p>Currently analyzing 12 supplier certifications with 94% confidence. Processing new supplier onboarding documentation and cross-referencing with current EU GMP requirements.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Supplier Intelligence -->
+        <div class="section" id="supplier-intelligence">
+            <h2>3. Supplier Intelligence</h2>
+            
+            <div class="screen-showcase">
+                <div class="screen-header">
+                    <div class="screen-title">Supplier Analytics Dashboard</div>
+                    <div class="screen-description">AI-powered supplier analytics with real-time compliance and risk insights</div>
+                </div>
+                <div class="screen-content">
+                    <h3>Intelligent Supplier Scoring</h3>
+                    <p>Advanced multi-factor scoring algorithm combining compliance history, risk assessment, financial stability, and operational performance to provide comprehensive supplier intelligence.</p>
+
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <h4><div class="feature-icon"></div>Dynamic Scoring</h4>
+                            <p>Real-time score updates based on compliance status changes, audit results, and risk factor modifications.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4><div class="feature-icon"></div>Predictive Analytics</h4>
+                            <p>Machine learning models predict future compliance risks and supplier performance trends.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4><div class="feature-icon"></div>Comparative Analysis</h4>
+                            <p>Benchmark suppliers against industry standards and peer performance metrics.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4><div class="feature-icon"></div>Certification Tracking</h4>
+                            <p>Automated monitoring of certification expiry dates with proactive renewal notifications.</p>
+                        </div>
+                    </div>
+
+                    <h3>Supplier Rating System</h3>
+                    <div class="compliance-matrix">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Rating</th>
+                                    <th>Criteria</th>
+                                    <th>Compliance Score</th>
+                                    <th>Risk Level</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="status-badge status-compliant">Preferred</span></td>
+                                    <td>Exceptional performance across all metrics</td>
+                                    <td>90%+</td>
+                                    <td>Low</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="status-badge status-compliant">Approved</span></td>
+                                    <td>Meets all requirements with good performance</td>
+                                    <td>75-89%</td>
+                                    <td>Low-Medium</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="status-badge status-warning">Conditional</span></td>
+                                    <td>Acceptable with monitoring required</td>
+                                    <td>60-74%</td>
+                                    <td>Medium-High</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="status-badge status-critical">Restricted</span></td>
+                                    <td>Significant issues requiring immediate action</td>
+                                    <td><60%</td>
+                                    <td>High</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Risk Management -->
+        <div class="section" id="risk-management">
+            <h2>4. Risk Management</h2>
+            
+            <div class="screen-showcase">
+                <div class="screen-header">
+                    <div class="screen-title">Predictive Risk Analysis</div>
+                    <div class="screen-description">Multi-layered risk mitigation with escalation workflows and predictive analytics</div>
+                </div>
+                <div class="screen-content">
+                    <h3>Risk Assessment Framework</h3>
+                    <p>Comprehensive risk evaluation across five critical dimensions with weighted scoring and predictive modeling to identify potential issues before they impact operations.</p>
+
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <h4><div class="feature-icon"></div>Financial Risk (25%)</h4>
+                            <p>Credit ratings, cash flow analysis, debt-to-equity ratios, and financial stability indicators.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4><div class="feature-icon"></div>Operational Risk (25%)</h4>
+                            <p>Production capacity, facility redundancy, operational procedures, and business continuity planning.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4><div class="feature-icon"></div>Quality Trend Risk (20%)</h4>
+                            <p>Quality metrics trends, audit results, customer complaints, and corrective action effectiveness.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4><div class="feature-icon"></div>Supply Chain Risk (15%)</h4>
+                            <p>Supplier dependencies, geographic concentration, logistics vulnerabilities, and alternative sourcing options.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4><div class="feature-icon"></div>Regulatory Risk (15%)</h4>
+                            <p>Compliance history, regulatory changes impact, inspection results, and regulatory relationship quality.</p>
+                        </div>
+                    </div>
+
+                    <h3>Mitigation Strategies</h3>
+                    <div class="workflow-step" data-step="1">
+                        <h4>Emergency Supplier Activation</h4>
+                        <p>Immediate activation of pre-qualified backup suppliers with 3-5 day implementation timeline. High cost but 90% effectiveness for critical supply continuity.</p>
+                    </div>
+                    <div class="workflow-step" data-step="2">
+                        <h4>Expedited Certification Review</h4>
+                        <p>Fast-track certification renewal processes with regulatory body coordination. 7-10 day timeline with medium cost and 75% effectiveness rate.</p>
+                    </div>
+                    <div class="workflow-step" data-step="3">
+                        <h4>Inventory Buffer Increase</h4>
+                        <p>Temporary safety stock level increases to mitigate short-term supply risks. 1-2 day implementation with low cost and 60% effectiveness.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RFP Generator -->
+        <div class="section" id="rfp-generator">
+            <h2>5. RFP Generator</h2>
+            
+            <div class="screen-showcase">
+                <div class="screen-header">
+                    <div class="screen-title">AI-Powered RFP Creation</div>
+                    <div class="screen-description">Intelligent RFP generation with compliance requirements and supplier matching</div>
+                </div>
+                <div class="screen-content">
+                    <h3>Intelligent RFP Workflow</h3>
+                    <p>Six-step guided process leveraging AI to generate comprehensive RFPs with automatic compliance mapping and supplier recommendations.</p>
+
+                    <div class="workflow-step" data-step="1">
+                        <h4>Project Details & Categories</h4>
+                        <p>Define project scope, budget, timeline, and select applicable product categories. Upload requirement documents and specifications.</p>
+                    </div>
+                    <div class="workflow-step" data-step="2">
+                        <h4>Target Markets Selection</h4>
+                        <p>Choose geographic markets and regulatory regions to automatically determine applicable compliance requirements.</p>
+                    </div>
+                    <div class="workflow-step" data-step="3">
+                        <h4>AI Compliance Mapping</h4>
+                        <p>AI agent analyzes selected categories and markets to suggest mandatory and recommended compliance standards.</p>
+                    </div>
+                    <div class="workflow-step" data-step="4">
+                        <h4>AI RFP Generation</h4>
+                        <p>Generate comprehensive RFP documents including technical specifications, compliance checklists, and evaluation matrices.</p>
+                    </div>
+                    <div class="workflow-step" data-step="5">
+                        <h4>Intelligent Supplier Selection</h4>
+                        <p>AI-powered supplier scoring and recommendation based on category match, compliance status, and risk assessment.</p>
+                    </div>
+                    <div class="workflow-step" data-step="6">
+                        <h4>RFP Distribution</h4>
+                        <p>Secure distribution to selected suppliers with portal access for submissions and automated tracking.</p>
+                    </div>
+
+                    <h3>Generated Artifacts</h3>
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <h4><div class="feature-icon"></div>Technical Specifications</h4>
+                            <p>Detailed technical requirements and specifications document with industry-standard formatting.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4><div class="feature-icon"></div>Compliance Checklist</h4>
+                            <p>Comprehensive regulatory compliance requirements checklist with mandatory and optional items.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4><div class="feature-icon"></div>Evaluation Matrix</h4>
+                            <p>Supplier evaluation criteria and scoring matrix with weighted factors and assessment guidelines.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4><div class="feature-icon"></div>Quality Questionnaire</h4>
+                            <p>Quality management system assessment questionnaire tailored to specific product categories.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RFP Tracker -->
+        <div class="section" id="rfp-tracker">
+            <h2>6. RFP Tracker</h2>
+            
+            <div class="screen-showcase">
+                <div class="screen-header">
+                    <div class="screen-title">RFP Process Management</div>
+                    <div class="screen-description">Comprehensive RFP lifecycle tracking from creation to award</div>
+                </div>
+                <div class="screen-content">
+                    <h3>RFP Lifecycle Management</h3>
+                    <p>Complete visibility into all RFP processes with status tracking, response management, and automated notifications throughout the procurement lifecycle.</p>
+
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <div class="metric-value">6</div>
+                            <div class="metric-label">Total RFPs</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-value">2</div>
+                            <div class="metric-label">Active RFPs</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-value">1</div>
+                            <div class="metric-label">In Evaluation</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-value">1</div>
+                            <div class="metric-label">Awarded</div>
+                        </div>
+                    </div>
+
+                    <h3>RFP Status Workflow</h3>
+                    <div class="compliance-matrix">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Status</th>
+                                    <th>Description</th>
+                                    <th>Typical Duration</th>
+                                    <th>Key Activities</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="status-badge status-warning">Draft</span></td>
+                                    <td>RFP creation and review phase</td>
+                                    <td>1-2 weeks</td>
+                                    <td>Document preparation, internal review</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="status-badge status-compliant">Sent</span></td>
+                                    <td>Distributed to selected suppliers</td>
+                                    <td>2-4 weeks</td>
+                                    <td>Supplier notifications, Q&A period</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="status-badge status-warning">Responses Received</span></td>
+                                    <td>Collecting supplier submissions</td>
+                                    <td>1 week</td>
+                                    <td>Response validation, completeness check</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="status-badge status-warning">Evaluation</span></td>
+                                    <td>Reviewing and scoring responses</td>
+                                    <td>2-3 weeks</td>
+                                    <td>Technical review, commercial evaluation</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="status-badge status-compliant">Awarded</span></td>
+                                    <td>Supplier selected and notified</td>
+                                    <td>1 week</td>
+                                    <td>Contract negotiation, award notification</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Reasoning -->
+        <div class="section" id="ai-reasoning">
+            <h2>7. AI Reasoning & Explainability</h2>
+            
+            <div class="screen-showcase">
+                <div class="screen-header">
+                    <div class="screen-title">Explainable AI Decision Making</div>
+                    <div class="screen-description">Transparent AI reasoning with detailed decision breakdowns and confidence scoring</div>
+                </div>
+                <div class="screen-content">
+                    <h3>AI Agent Ecosystem</h3>
+                    <p>Three specialized AI agents powered by AWS Bedrock provide comprehensive analysis with full transparency into decision-making processes and reasoning.</p>
+
+                    <div class="ai-agent-card">
+                        <h4>EU GMP Compliance Analyzer</h4>
+                        <p>Specialized in European pharmaceutical regulations, analyzing supplier compliance with EU GMP requirements, certification status, and regulatory history with 94% confidence.</p>
+                    </div>
+
+                    <div class="ai-agent-card">
+                        <h4>Predictive Risk Assessor</h4>
+                        <p>Multi-factor risk analysis combining financial, operational, quality, and supply chain data to predict potential issues with 89% confidence and provide mitigation strategies.</p>
+                    </div>
+
+                    <div class="ai-agent-card">
+                        <h4>Document Validation Engine</h4>
+                        <p>Automated document processing and validation against regulatory requirements, identifying inconsistencies and missing documentation with 96% accuracy.</p>
+                    </div>
+
+                    <h3>Decision Transparency Features</h3>
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <h4><div class="feature-icon"></div>Scoring Breakdown</h4>
+                            <p>Detailed explanation of how compliance and risk scores are calculated with factor weights and contributing elements.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4><div class="feature-icon"></div>Key Findings</h4>
+                            <p>Highlighted critical findings and observations that influenced the AI decision-making process.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4><div class="feature-icon"></div>Confidence Levels</h4>
+                            <p>AI confidence scoring for each analysis with explanation of factors affecting confidence levels.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4><div class="feature-icon"></div>Recommendations</h4>
+                            <p>Actionable recommendations based on AI analysis with prioritization and implementation guidance.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Supplier Portal -->
+        <div class="section" id="supplier-portal">
+            <h2>8. Supplier Collaboration Portal</h2>
+            
+            <div class="screen-showcase">
+                <div class="screen-header">
+                    <div class="screen-title">Secure Supplier Collaboration</div>
+                    <div class="screen-description">Dedicated portal for supplier document management and communication</div>
+                </div>
+                <div class="screen-content">
+                    <h3>Supplier Self-Service Capabilities</h3>
+                    <p>Comprehensive portal enabling suppliers to manage their compliance documentation, track certification status, and collaborate securely with procurement teams.</p>
+
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <h4><div class="feature-icon"></div>Compliance Dashboard</h4>
+                            <p>Real-time view of compliance status across all regulatory requirements with expiry tracking and renewal notifications.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4><div class="feature-icon"></div>Document Management</h4>
+                            <p>Secure upload, storage, and version control for all compliance documentation with automated validation.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4><div class="feature-icon"></div>Communication Center</h4>
+                            <p>Secure messaging system for direct communication with procurement teams and compliance managers.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4><div class="feature-icon"></div>RFP Submissions</h4>
+                            <p>Streamlined RFP response submission with guided workflows and automatic completeness checking.</p>
+                        </div>
+                    </div>
+
+                    <h3>Compliance Status Overview</h3>
+                    <div class="compliance-matrix">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Standard</th>
+                                    <th>Status</th>
+                                    <th>Score</th>
+                                    <th>Expiry Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>EU GMP</td>
+                                    <td><span class="status-badge status-compliant">Compliant</span></td>
+                                    <td>95%</td>
+                                    <td>2025-06-15</td>
+                                </tr>
+                                <tr>
+                                    <td>FDA Registration</td>
+                                    <td><span class="status-badge status-compliant">Compliant</span></td>
+                                    <td>88%</td>
+                                    <td>2025-12-01</td>
+                                </tr>
+                                <tr>
+                                    <td>ISO 15378</td>
+                                    <td><span class="status-badge status-compliant">Compliant</span></td>
+                                    <td>94%</td>
+                                    <td>2025-09-30</td>
+                                </tr>
+                                <tr>
+                                    <td>REACH</td>
+                                    <td><span class="status-badge status-warning">Warning</span></td>
+                                    <td>76%</td>
+                                    <td>2024-03-15</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Audit Trail -->
+        <div class="section" id="audit-trail">
+            <h2>9. Audit Trail</h2>
+            
+            <div class="screen-showcase">
+                <div class="screen-header">
+                    <div class="screen-title">Comprehensive Audit Trail</div>
+                    <div class="screen-description">Complete history of AI decisions and human interventions with full traceability</div>
+                </div>
+                <div class="screen-content">
+                    <h3>Audit Event Categories</h3>
+                    <p>Comprehensive logging of all system activities with detailed event categorization, impact assessment, and full traceability for regulatory compliance and internal auditing.</p>
+
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <h4><div class="feature-icon"></div>Compliance Checks</h4>
+                            <p>Automated compliance verification events with detailed analysis results and confidence scoring.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4><div class="feature-icon"></div>Risk Assessments</h4>
+                            <p>Risk evaluation events with factor analysis, scoring changes, and mitigation recommendations.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4><div class="feature-icon"></div>Document Operations</h4>
+                            <p>Document upload, validation, approval, and rejection events with version tracking and change history.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4><div class="feature-icon"></div>System Alerts</h4>
+                            <p>Critical alerts, warnings, and notifications with escalation tracking and resolution status.</p>
+                        </div>
+                    </div>
+
+                    <h3>Event Severity Classification</h3>
+                    <div class="compliance-matrix">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Severity</th>
+                                    <th>Description</th>
+                                    <th>Response Time</th>
+                                    <th>Escalation</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="status-badge status-critical">Critical</span></td>
+                                    <td>Immediate attention required</td>
+                                    <td>< 1 hour</td>
+                                    <td>Automatic escalation</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="status-badge status-warning">High</span></td>
+                                    <td>Urgent action needed</td>
+                                    <td>< 4 hours</td>
+                                    <td>Manager notification</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="status-badge status-warning">Medium</span></td>
+                                    <td>Monitoring required</td>
+                                    <td>< 24 hours</td>
+                                    <td>Team notification</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="status-badge status-compliant">Low</span></td>
+                                    <td>Informational</td>
+                                    <td>Standard review</td>
+                                    <td>No escalation</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Technical Architecture -->
+        <div class="section" id="architecture">
+            <h2>10. Technical Architecture</h2>
+            
+            <div class="screen-showcase">
+                <div class="screen-header">
+                    <div class="screen-title">Modern Technology Stack</div>
+                    <div class="screen-description">Scalable, secure, and maintainable architecture built with industry best practices</div>
+                </div>
+                <div class="screen-content">
+                    <h3>Technology Stack</h3>
+                    <div class="tech-stack">
+                        <div class="tech-category">
+                            <h4>Frontend</h4>
+                            <ul class="tech-list">
+                                <li>React 18 with TypeScript</li>
+                                <li>React Router for navigation</li>
+                                <li>TailwindCSS for styling</li>
+                                <li>Lucide React for icons</li>
+                                <li>Vite for build tooling</li>
+                            </ul>
+                        </div>
+                        <div class="tech-category">
+                            <h4>State Management</h4>
+                            <ul class="tech-list">
+                                <li>React Query for server state</li>
+                                <li>React Context for global state</li>
+                                <li>Custom hooks for business logic</li>
+                                <li>TypeScript for type safety</li>
+                            </ul>
+                        </div>
+                        <div class="tech-category">
+                            <h4>AI Integration</h4>
+                            <ul class="tech-list">
+                                <li>AWS Bedrock SDK</li>
+                                <li>Custom agent providers</li>
+                                <li>Mock implementations for development</li>
+                                <li>Confidence scoring and explainability</li>
+                            </ul>
+                        </div>
+                        <div class="tech-category">
+                            <h4>Data Management</h4>
+                            <ul class="tech-list">
+                                <li>Supabase for database</li>
+                                <li>Row Level Security (RLS)</li>
+                                <li>Real-time subscriptions</li>
+                                <li>Automated migrations</li>
+                            </ul>
+                        </div>
+                        <div class="tech-category">
+                            <h4>Code Quality</h4>
+                            <ul class="tech-list">
+                                <li>ESLint for code linting</li>
+                                <li>TypeScript strict mode</li>
+                                <li>Component-based architecture</li>
+                                <li>Modular file organization</li>
+                            </ul>
+                        </div>
+                        <div class="tech-category">
+                            <h4>Development</h4>
+                            <ul class="tech-list">
+                                <li>Hot module replacement</li>
+                                <li>Development server</li>
+                                <li>Production build optimization</li>
+                                <li>Environment configuration</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h3>Key Architectural Principles</h3>
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <h4><div class="feature-icon"></div>Modular Design</div>
+                            <p>Component-based architecture with clear separation of concerns and reusable UI components.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4><div class="feature-icon"></div>Type Safety</h4>
+                            <p>Comprehensive TypeScript implementation ensuring type safety across all application layers.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4><div class="feature-icon"></div>Performance</h4>
+                            <p>Optimized rendering with React Query caching, lazy loading, and efficient state management.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4><div class="feature-icon"></div>Scalability</h4>
+                            <p>Designed for enterprise scale with modular architecture and efficient data handling patterns.</p>
+                        </div>
+                    </div>
+
+                    <h3>Security & Compliance</h3>
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <h4><div class="feature-icon"></div>Data Protection</h4>
+                            <p>Row-level security, encrypted communications, and secure authentication mechanisms.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4><div class="feature-icon"></div>Audit Compliance</h4>
+                            <p>Comprehensive audit trails, event logging, and regulatory compliance tracking.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4><div class="feature-icon"></div>Access Control</h4>
+                            <p>Role-based access control with granular permissions and secure supplier portals.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4><div class="feature-icon"></div>Data Integrity</h4>
+                            <p>Validation at all layers, data consistency checks, and automated backup systems.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="section">
+            <h2>Conclusion</h2>
+            <p>proCURE represents the next generation of pharmaceutical procurement platforms, combining advanced AI capabilities with comprehensive compliance management and intuitive user experience. The platform's modular architecture, robust security features, and intelligent automation capabilities position it as a transformative solution for life sciences organizations seeking to optimize their supplier management and procurement processes.</p>
+            
+            <p>With its focus on regulatory compliance, predictive risk management, and transparent AI decision-making, proCURE addresses the critical challenges facing pharmaceutical procurement teams while providing the scalability and flexibility needed for enterprise deployment.</p>
+            
+            <div style="text-align: center; margin-top: 60px; padding-top: 40px; border-top: 1px solid #e2e8f0; color: #64748b;">
+                <p>proCURE Design Document v1.0 | Generated January 2024</p>
+                <p>© 2024 Life Sciences proCURE - AI-Powered Procurement Platform</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
