@@ -16,6 +16,7 @@ export default function AuditTrail() {
                            (event.supplierName?.toLowerCase().includes(searchTerm.toLowerCase()));
       return matchesSearch;
     });
+  }, [auditData?.data, searchTerm]);
 
   const getImpactColor = (severity: string) => {
     switch (severity) {
