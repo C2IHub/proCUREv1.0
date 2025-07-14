@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Building2, Shield, AlertTriangle, CheckCircle, ExternalLink, Search } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 interface Supplier {
   id: string;
@@ -68,6 +69,7 @@ const mockSuppliers: Supplier[] = [
 const SupplierTracker: React.FC = () => {
   const [selectedSupplier, setSelectedSupplier] = useState<string | null>('1'); // First supplier selected by default
   const [searchTerm, setSearchTerm] = useState('');
+  const navigate = useNavigate();
 
   const filteredSuppliers = mockSuppliers.filter(supplier =>
     supplier.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -95,6 +97,17 @@ const SupplierTracker: React.FC = () => {
       case 'pending': return 'bg-yellow-100 text-yellow-800';
       case 'suspended': return 'bg-red-100 text-red-800';
       default: return 'bg-gray-100 text-gray-800';
+    }
+  };
+  const handleViewPortal = () => {
+    if (selectedSupplier) {
+      navigate(`/supplier/${selectedSupplier}/portal`);
+    }
+  };
+
+  const handleAnalyzeCompliance = () => {
+    if (selectedSupplier) {
+      navigate(`/supplier/${selectedSupplier}/reasoning`);
     }
   };
 
@@ -185,10 +198,12 @@ const SupplierTracker: React.FC = () => {
               </div>
               <div className="flex space-x-3">
                 <button className="flex items-center px-3 py-1.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm">
+                  onClick={handleViewPortal}
                   <ExternalLink className="h-4 w-4 mr-2" />
                   View Portal
                 </button>
                 <button className="flex items-center px-3 py-1.5 border border-gray-300 text-gray-700 bg-white rounded-lg hover:bg-gray-50 text-sm">
+                  onClick={handleAnalyzeCompliance}
                   <Shield className="h-4 w-4 mr-2" />
                   Analyze Compliance
                 </button>
