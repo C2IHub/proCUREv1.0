@@ -202,7 +202,7 @@ export default function AgenticInterface({
 
   return (
     <div className={`fixed right-0 top-0 h-full bg-white border-l border-gray-200 shadow-lg z-40 transition-all duration-300 ${
-      isMinimized ? 'w-16' : 'w-96'
+      isMinimized ? 'w-16' : 'w-120'
     }`}>
       {/* Header */}
       <div className="p-4 border-b border-gray-200 bg-gradient-to-r from-purple-50 to-purple-100">

@@ -39,7 +39,7 @@ function App() {
           <Router>
             <div className="min-h-screen bg-gray-50">
               <Navigation currentUser={currentUser} />
-              <main className="pl-64 pr-96">
+              <main className="pl-64 pr-120">
                 <Routes>
                   <Route path="/" element={<RiskComplianceDashboard />} />
                   <Route path="/supplier-tracker" element={<SupplierTracker />} />
