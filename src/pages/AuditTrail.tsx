@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { History, Search, Filter, Download, Eye, User, Bot, FileText, CheckCircle, AlertTriangle, Clock } from 'lucide-react';
 import { useAuditEvents } from '../hooks/useApi';
 import AgenticInterface from '../components/AgenticInterface';
@@ -7,8 +8,16 @@ export default function AuditTrail() {
   const [selectedFilter, setSelectedFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   const { data: auditData, isLoading, error } = useAuditEvents(currentPage, 20);
+
+  // Handle initial load state
+  useEffect(() => {
+    if (!isLoading && auditData) {
+      setIsInitialLoad(false);
+    }
+  }, [isLoading, auditData]);
 
   const filteredEvents = useMemo(() => {
     if (!auditData?.data) return [];
@@ -42,14 +51,22 @@ export default function AuditTrail() {
     }
   };
 
-  if (isLoading) {
+  // Show loading state only on initial load or when there's no data yet
+  if (isInitialLoad || (isLoading && !auditData)) {
     return (
       <div className="p-8">
         <div className="mb-6">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Audit Trail</h1>
-          <p className="text-gray-600">Complete history of AI decisions and human interventions</p>
+          <p className="text-gray-600">Loading audit trail...</p>
         </div>
-        <div className="space-y-4">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+          <div className="animate-pulse space-y-4">
+            <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+            <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+            <div className="h-4 bg-gray-200 rounded w-5/6"></div>
+          </div>
+        </div>
+        <div className="space-y-4 mt-6">
           {[1, 2, 3, 4, 5].map((i) => (
             <div key={i} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 animate-pulse">
               <div className="flex items-start space-x-4">
