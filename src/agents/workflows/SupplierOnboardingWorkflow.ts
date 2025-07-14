@@ -607,5 +607,3 @@ export const complianceReviewWorkflow: WorkflowDefinition = {
     approvedBy: 'compliance_team'
   }
 };
-
-export { supplierOnboardingWorkflow, complianceReviewWorkflow };
