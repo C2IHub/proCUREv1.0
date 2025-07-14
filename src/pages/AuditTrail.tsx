@@ -4,6 +4,7 @@ import { useAuditEvents } from '../hooks/useApi';
 import AgenticInterface from '../components/AgenticInterface';
 
 export default function AuditTrail() {
+  const [selectedFilter, setSelectedFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
 
