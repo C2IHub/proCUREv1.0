@@ -196,13 +196,18 @@ const SupplierTracker: React.FC = () => {
                 </h3>
                 <p className="text-xs text-gray-600">Choose an action for this supplier</p>
               </div>
-                <button className="flex items-center px-3 py-1.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm">
+              <div className="flex space-x-3">
+                <button 
                   onClick={handleViewPortal}
+                  className="flex items-center px-3 py-1.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm"
+                >
                   <ExternalLink className="h-4 w-4 mr-2" />
                   View Portal
-                  onClick={handleAnalyzeCompliance}
                 </button>
-                <button className="flex items-center px-3 py-1.5 border border-gray-300 text-gray-700 bg-white rounded-lg hover:bg-gray-50 text-sm">
+                <button 
+                  onClick={handleAnalyzeCompliance}
+                  className="flex items-center px-3 py-1.5 border border-gray-300 text-gray-700 bg-white rounded-lg hover:bg-gray-50 text-sm"
+                >
                   <Shield className="h-4 w-4 mr-2" />
                   Analyze Compliance
                 </button>
