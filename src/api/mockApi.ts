@@ -368,7 +368,37 @@ export const supplierApi = {
 
   async getSupplier(id: string): Promise<ApiResponse<Supplier>> {
     await delay(300);
-    const supplier = mockSuppliers.find(s => s.id === id);
+    // First try to find in mockSuppliers, then try to find by mapping from master suppliers
+    let supplier = mockSuppliers.find(s => s.id === id);
+    
+    // If not found in mockSuppliers, try to create from master supplier data
+    if (!supplier) {
+      const masterSupplier = getSupplierById(id);
+      if (masterSupplier) {
+        const complianceScore = calculateComplianceScore(masterSupplier.id);
+        const riskScore = calculateRiskScore(masterSupplier.id);
+        const supplierRating = determineSupplierRating(complianceScore, riskScore);
+        
+        // Get certifications from compliance requirements
+        const requirements = allComplianceRequirements.find(req => req.supplierId === masterSupplier.id);
+        const certifications = requirements?.requirements
+          .filter(req => req.type === 'certification' && req.currentStatus === 'valid')
+          .map(req => req.name.replace(' Certification', '')) || ['ISO 15378'];
+        
+        supplier = {
+          id: masterSupplier.id,
+          name: masterSupplier.name,
+          category: masterSupplier.category,
+          complianceScore,
+          riskScore,
+          lastAudit: '2024-01-15', // Would come from audit system
+          supplierRating,
+          certifications,
+          lastUpdated: new Date().toISOString()
+        };
+      }
+    }
+    
     if (!supplier) {
       throw new Error(`Supplier with id ${id} not found`);
     }
