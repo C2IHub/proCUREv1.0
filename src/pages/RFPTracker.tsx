@@ -591,18 +591,24 @@ export default function RFPTracker() {
                 <p className="text-xs text-gray-600">Choose an action for this RFP</p>
               </div>
               <div className="flex space-x-3">
-                <button className="flex items-center px-3 py-1.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm">
+                <button
                   onClick={handleViewDetails}
+                  className="flex items-center px-3 py-1.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm"
+                >
                   <Eye className="h-4 w-4 mr-2" />
                   View Details
                 </button>
-                <button className="flex items-center px-3 py-1.5 border border-gray-300 text-gray-700 bg-white rounded-lg hover:bg-gray-50 text-sm">
+                <button
                   onClick={handleCommunications}
+                  className="flex items-center px-3 py-1.5 border border-gray-300 text-gray-700 bg-white rounded-lg hover:bg-gray-50 text-sm"
+                >
                   <MessageSquare className="h-4 w-4 mr-2" />
                   Communications
                 </button>
-                <button className="flex items-center px-3 py-1.5 border border-gray-300 text-gray-700 bg-white rounded-lg hover:bg-gray-50 text-sm">
+                <button
                   onClick={handleExport}
+                  className="flex items-center px-3 py-1.5 border border-gray-300 text-gray-700 bg-white rounded-lg hover:bg-gray-50 text-sm"
+                >
                   <Download className="h-4 w-4 mr-2" />
                   Export
                 </button>

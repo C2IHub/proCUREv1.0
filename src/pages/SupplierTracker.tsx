@@ -196,14 +196,13 @@ const SupplierTracker: React.FC = () => {
                 </h3>
                 <p className="text-xs text-gray-600">Choose an action for this supplier</p>
               </div>
-              <div className="flex space-x-3">
                 <button className="flex items-center px-3 py-1.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm">
                   onClick={handleViewPortal}
                   <ExternalLink className="h-4 w-4 mr-2" />
                   View Portal
+                  onClick={handleAnalyzeCompliance}
                 </button>
                 <button className="flex items-center px-3 py-1.5 border border-gray-300 text-gray-700 bg-white rounded-lg hover:bg-gray-50 text-sm">
-                  onClick={handleAnalyzeCompliance}
                   <Shield className="h-4 w-4 mr-2" />
                   Analyze Compliance
                 </button>
@@ -246,6 +245,7 @@ const SupplierTracker: React.FC = () => {
                   onClick={() => setSelectedSupplier(supplier.id)}
                   className={`cursor-pointer hover:bg-gray-50 ${
                     selectedSupplier === supplier.id ? 'bg-blue-50 border-l-4 border-blue-500' : ''
+                  onClick={handleViewPortal}
                   }`}
                 >
                   <td className="px-6 py-4 whitespace-nowrap">
