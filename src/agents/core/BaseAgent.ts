@@ -400,3 +400,5 @@ export abstract class BaseAgent {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 }
+
+export { BaseAgent }
