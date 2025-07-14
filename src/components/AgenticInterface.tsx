@@ -285,7 +285,7 @@ export default function AgenticInterface({
           </div>
 
           {/* Input Area */}
-          <div className="p-4 border-t border-gray-200 bg-white">
+          <div className="p-4 border-t border-gray-200 bg-white sticky bottom-0">
             <div className="flex space-x-2">
               <div className="flex-1 relative">
                 <textarea
@@ -293,8 +293,8 @@ export default function AgenticInterface({
                   onChange={(e) => setInputValue(e.target.value)}
                   onKeyPress={handleKeyPress}
                   placeholder="Ask me anything..."
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none text-sm"
-                  rows={2}
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none text-sm max-h-20"
+                  rows={1}
                   disabled={isProcessing}
                 />
               </div>
