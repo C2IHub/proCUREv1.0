@@ -11,6 +11,7 @@ import RFPTracker from './pages/RFPTracker';
 import SupplierPortal from './pages/SupplierPortal';
 import AuditTrail from './pages/AuditTrail';
 import Settings from './pages/Settings';
+import { AgentSystemProvider } from './context/AgentSystemProvider';
 import { BedrockAgentProvider } from './context/BedrockAgentProvider';
 import { SupplierProvider } from './hooks/useSupplierContext';
 
@@ -34,78 +35,80 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <BedrockAgentProvider>
-        <SupplierProvider>
-          <Router>
-            <div className="min-h-screen bg-gray-50">
-              <Navigation currentUser={currentUser} />
-              <main className="pl-64 pr-120">
+      <AgentSystemProvider>
+        <BedrockAgentProvider>
+          <SupplierProvider>
+            <Router>
+              <div className="min-h-screen bg-gray-50">
+                <Navigation currentUser={currentUser} />
+                <main className="pl-64 pr-120">
+                  <Routes>
+                    <Route path="/" element={<RiskComplianceDashboard />} />
+                    <Route path="/supplier-tracker" element={<SupplierTracker />} />
+                    <Route path="/rfp-wizard" element={<RFPWizard />} />
+                    <Route path="/rfp-tracker" element={<RFPTracker />} />
+                    <Route path="/audit-trail" element={<AuditTrail />} />
+                    <Route path="/settings" element={<Settings />} />
+                    {/* Dynamic supplier routes */}
+                    <Route path="/supplier/:id/reasoning" element={<AgentReasoning />} />
+                    <Route path="/supplier/:id/portal" element={<SupplierPortal />} />
+                  </Routes>
+                </main>
                 <Routes>
-                  <Route path="/" element={<RiskComplianceDashboard />} />
-                  <Route path="/supplier-tracker" element={<SupplierTracker />} />
-                  <Route path="/rfp-wizard" element={<RFPWizard />} />
-                  <Route path="/rfp-tracker" element={<RFPTracker />} />
-                  <Route path="/audit-trail" element={<AuditTrail />} />
-                  <Route path="/settings" element={<Settings />} />
-                  {/* Dynamic supplier routes */}
-                  <Route path="/supplier/:id/reasoning" element={<AgentReasoning />} />
-                  <Route path="/supplier/:id/portal" element={<SupplierPortal />} />
+                  <Route path="/" element={
+                    <AgenticInterface 
+                      context="compliance"
+                      contextData={{}}
+                    />
+                  } />
+                  <Route path="/supplier-tracker" element={
+                    <AgenticInterface 
+                      context="supplier"
+                      contextData={{}}
+                    />
+                  } />
+                  <Route path="/rfp-wizard" element={
+                    <AgenticInterface 
+                      context="rfp"
+                      contextData={{}}
+                    />
+                  } />
+                  <Route path="/rfp-tracker" element={
+                    <AgenticInterface 
+                      context="tracker"
+                      contextData={{}}
+                    />
+                  } />
+                  <Route path="/audit-trail" element={
+                    <AgenticInterface 
+                      context="audit"
+                      contextData={{}}
+                    />
+                  } />
+                  <Route path="/settings" element={
+                    <AgenticInterface 
+                      context="compliance"
+                      contextData={{}}
+                    />
+                  } />
+                  <Route path="/supplier/:id/reasoning" element={
+                    <AgenticInterface 
+                      context="supplier"
+                      contextData={{}}
+                    />
+                  } />
+                  <Route path="/supplier/:id/portal" element={
+                    <AgenticInterface 
+                      context="portal"
+                      contextData={{}}
+                    />
+                  } />
                 </Routes>
-              </main>
-              <Routes>
-                <Route path="/" element={
-                  <AgenticInterface 
-                    context="compliance"
-                    contextData={{}}
-                  />
-                } />
-                <Route path="/supplier-tracker" element={
-                  <AgenticInterface 
-                    context="supplier"
-                    contextData={{}}
-                  />
-                } />
-                <Route path="/rfp-wizard" element={
-                  <AgenticInterface 
-                    context="rfp"
-                    contextData={{}}
-                  />
-                } />
-                <Route path="/rfp-tracker" element={
-                  <AgenticInterface 
-                    context="tracker"
-                    contextData={{}}
-                  />
-                } />
-                <Route path="/audit-trail" element={
-                  <AgenticInterface 
-                    context="audit"
-                    contextData={{}}
-                  />
-                } />
-                <Route path="/settings" element={
-                  <AgenticInterface 
-                    context="compliance"
-                    contextData={{}}
-                  />
-                } />
-                <Route path="/supplier/:id/reasoning" element={
-                  <AgenticInterface 
-                    context="supplier"
-                    contextData={{}}
-                  />
-                } />
-                <Route path="/supplier/:id/portal" element={
-                  <AgenticInterface 
-                    context="portal"
-                    contextData={{}}
-                  />
-                } />
-              </Routes>
-            </div>
-          </Router>
-        </SupplierProvider>
-      </BedrockAgentProvider>
+              </div>
+            </Router>
+          </SupplierProvider>
+        </BedrockAgentProvider>
+      </AgentSystemProvider>
     </QueryClientProvider>
   );
 }
