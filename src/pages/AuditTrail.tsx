@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { History, Search, Filter, Download, Eye, User, Bot, FileText, CheckCircle, AlertTriangle, Clock } from 'lucide-react';
 import { useAuditEvents } from '../hooks/useApi';
 import AgenticInterface from '../components/AgenticInterface';
 
