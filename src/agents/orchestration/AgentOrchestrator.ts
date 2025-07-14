@@ -215,5 +215,3 @@ interface OrchestratorStats {
   averageExecutionTime: number;
   agentUtilization: Map<AgentId, number>;
 }
-
-export { AgentOrchestrator };
