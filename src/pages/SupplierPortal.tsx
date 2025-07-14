@@ -6,7 +6,7 @@ import AgenticInterface from '../components/AgenticInterface';
 
 export default function SupplierPortal() {
   const { id: supplierId } = useParams<{ id: string }>();
-  const { data: supplier } = useSupplier(supplierId || '');
+  const { data: supplier, isLoading, error } = useSupplier(supplierId || '');
   const [activeTab, setActiveTab] = useState('dashboard');
   const [uploadProgress, setUploadProgress] = useState(0);
 
@@ -102,6 +102,30 @@ export default function SupplierPortal() {
 
   return (
     <div className="p-8">
+      {/* Loading State */}
+      {isLoading && (
+        <div className="flex items-center justify-center py-12">
+          <div className="text-gray-600">Loading supplier data...</div>
+        </div>
+      )}
+
+      {/* Error State */}
+      {error && (
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+          <div className="text-red-800">Error loading supplier data. Please try again.</div>
+        </div>
+      )}
+
+      {/* No Supplier Found */}
+      {!isLoading && !error && !supplier && (
+        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+          <div className="text-yellow-800">Supplier not found.</div>
+        </div>
+      )}
+
+      {/* Main Content - Only show if supplier data is loaded */}
+      {!isLoading && !error && supplier && (
+        <>
       {/* Header */}
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">Supplier Collaboration</h1>
@@ -120,13 +144,13 @@ export default function SupplierPortal() {
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-xl font-semibold text-gray-900 mb-2">
-              Welcome, {supplier?.name || 'Supplier'}
+              Welcome, {supplier.name}
             </h2>
-            <p className="text-gray-600">{supplier?.category || 'Supplier'} • Active Supplier</p>
+            <p className="text-gray-600">{supplier.category} • Active Supplier</p>
           </div>
           <div className="text-right">
             <div className="text-3xl font-bold text-blue-600 mb-1">
-              {supplier?.complianceScore.overall || complianceStatus.overall}%
+              {supplier.complianceScore.overall}%
             </div>
             <p className="text-sm text-gray-600">Overall Compliance Score</p>
           </div>
@@ -333,6 +357,8 @@ export default function SupplierPortal() {
         </div>
       )}
 
+        </>
+      )}
     </div>
   );
 }
