@@ -13,65 +13,17 @@ interface Supplier {
   status: 'active' | 'pending' | 'suspended';
 }
 
-const mockSuppliers: Supplier[] = [
-  {
-    id: '1',
-    name: 'TechCorp Solutions',
-    category: 'Technology Services',
-    complianceScore: 92,
-    riskLevel: 'low',
-    certifications: ['ISO 27001', 'SOC 2', 'GDPR'],
-    lastAudit: '2024-01-15',
-    status: 'active'
-  },
-  {
-    id: '2',
-    name: 'Global Manufacturing Inc',
-    category: 'Manufacturing',
-    complianceScore: 78,
-    riskLevel: 'medium',
-    certifications: ['ISO 9001', 'ISO 14001'],
-    lastAudit: '2023-12-10',
-    status: 'active'
-  },
-  {
-    id: '3',
-    name: 'DataSecure Ltd',
-    category: 'Data Processing',
-    complianceScore: 65,
-    riskLevel: 'high',
-    certifications: ['SOC 2'],
-    lastAudit: '2023-11-20',
-    status: 'pending'
-  },
-  {
-    id: '4',
-    name: 'CloudServices Pro',
-    category: 'Cloud Infrastructure',
-    complianceScore: 88,
-    riskLevel: 'low',
-    certifications: ['ISO 27001', 'SOC 2', 'PCI DSS', 'HIPAA'],
-    lastAudit: '2024-01-08',
-    status: 'active'
-  },
-  {
-    id: '5',
-    name: 'LogisticFlow Systems',
-    category: 'Logistics',
-    complianceScore: 74,
-    riskLevel: 'medium',
-    certifications: ['ISO 9001'],
-    lastAudit: '2023-12-22',
-    status: 'active'
-  }
-];
+
+import { useSuppliers } from '../hooks/useApi';
 
 const SupplierTracker: React.FC = () => {
-  const [selectedSupplier, setSelectedSupplier] = useState<string | null>('1'); // First supplier selected by default
+  const [selectedSupplier, setSelectedSupplier] = useState<string | null>('SUP001'); // First supplier selected by default
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
 
-  const filteredSuppliers = mockSuppliers.filter(supplier =>
+  const { data: suppliers = [], isLoading, error } = useSuppliers();
+
+  const filteredSuppliers = suppliers.filter(supplier =>
     supplier.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     supplier.category.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -93,9 +45,10 @@ const SupplierTracker: React.FC = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'active': return 'bg-green-100 text-green-800';
-      case 'pending': return 'bg-yellow-100 text-yellow-800';
-      case 'suspended': return 'bg-red-100 text-red-800';
+      case 'preferred': return 'bg-green-100 text-green-800';
+      case 'approved': return 'bg-blue-100 text-blue-800';
+      case 'conditional': return 'bg-yellow-100 text-yellow-800';
+      case 'restricted': return 'bg-red-100 text-red-800';
       default: return 'bg-gray-100 text-gray-800';
     }
   };
@@ -112,10 +65,32 @@ const SupplierTracker: React.FC = () => {
     }
   };
 
-  const totalSuppliers = mockSuppliers.length;
-  const activeSuppliers = mockSuppliers.filter(s => s.status === 'active').length;
-  const highRiskSuppliers = mockSuppliers.filter(s => s.riskLevel === 'high').length;
-  const avgComplianceScore = Math.round(mockSuppliers.reduce((sum, s) => sum + s.complianceScore, 0) / totalSuppliers);
+  const totalSuppliers = suppliers.length;
+  const activeSuppliers = suppliers.filter(s => s.supplierRating === 'preferred' || s.supplierRating === 'approved').length;
+  const highRiskSuppliers = suppliers.filter(s => s.riskScore.level === 'high').length;
+  const avgComplianceScore = suppliers.length > 0 ? Math.round(suppliers.reduce((sum, s) => sum + s.complianceScore.overall, 0) / totalSuppliers) : 0;
+
+  if (isLoading) {
+    return (
+      <div className="p-8 space-y-6">
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold text-gray-900">Supplier Tracker</h1>
+          <p className="text-gray-600">Loading supplier data...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="p-8 space-y-6">
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold text-gray-900">Supplier Tracker</h1>
+          <p className="text-red-600">Error loading supplier data. Please try again.</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-8 space-y-6">
@@ -193,7 +168,7 @@ const SupplierTracker: React.FC = () => {
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-sm font-medium text-gray-900">
-                  Selected: {mockSuppliers.find(s => s.id === selectedSupplier)?.name}
+                  Selected: {suppliers.find(s => s.id === selectedSupplier)?.name}
                 </h3>
                 <p className="text-xs text-gray-600">Choose an action for this supplier</p>
               </div>
@@ -260,13 +235,13 @@ const SupplierTracker: React.FC = () => {
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getComplianceColor(supplier.complianceScore)}`}>
-                      {supplier.complianceScore}%
+                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getComplianceColor(supplier.complianceScore.overall)}`}>
+                      {supplier.complianceScore.overall}%
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full capitalize ${getRiskColor(supplier.riskLevel)}`}>
-                      {supplier.riskLevel}
+                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full capitalize ${getRiskColor(supplier.riskScore.level)}`}>
+                      {supplier.riskScore.level}
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
@@ -276,8 +251,8 @@ const SupplierTracker: React.FC = () => {
                     {new Date(supplier.lastAudit).toLocaleDateString()}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full capitalize ${getStatusColor(supplier.status)}`}>
-                      {supplier.status}
+                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full capitalize ${getStatusColor(supplier.supplierRating)}`}>
+                      {supplier.supplierRating}
                     </span>
                   </td>
                 </tr>
