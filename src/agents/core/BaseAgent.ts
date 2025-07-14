@@ -399,6 +399,3 @@ export abstract class BaseAgent {
   private sleep(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
-}
-
-export { BaseAgent }

@@ -9,7 +9,8 @@ import {
   ChevronDown,
   Settings,
   LogOut,
-  History
+  History,
+  Workflow
 } from 'lucide-react';
 
 interface NavigationProps {
@@ -37,6 +38,12 @@ export default function Navigation({ currentUser }: NavigationProps) {
       items: [
         { name: 'RFP Generator', href: '/rfp-wizard', icon: FileText },
         { name: 'RFP Tracker', href: '/rfp-tracker', icon: ClipboardList },
+      ]
+    },
+    {
+      title: 'Automation',
+      items: [
+        { name: 'Workflows', href: '/workflows', icon: Workflow },
       ]
     },
     {

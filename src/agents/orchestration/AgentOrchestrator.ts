@@ -4,7 +4,8 @@ import {
   AgentExecutionContext,
   WorkflowDefinition,
   WorkflowExecution,
-  AgentId
+  AgentId,
+  WorkflowStatus
 } from '../../types/agents';
 import { AgentRegistry } from '../registry/AgentRegistry';
 import { WorkflowEngine } from './WorkflowEngine';

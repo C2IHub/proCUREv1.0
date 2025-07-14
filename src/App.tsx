@@ -11,6 +11,7 @@ import RFPTracker from './pages/RFPTracker';
 import SupplierPortal from './pages/SupplierPortal';
 import AuditTrail from './pages/AuditTrail';
 import Settings from './pages/Settings';
+import WorkflowDashboard from './pages/WorkflowDashboard';
 import { AgentSystemProvider } from './context/AgentSystemProvider';
 import { BedrockAgentProvider } from './context/BedrockAgentProvider';
 import { SupplierProvider } from './hooks/useSupplierContext';
@@ -47,6 +48,7 @@ function App() {
                     <Route path="/supplier-tracker" element={<SupplierTracker />} />
                     <Route path="/rfp-wizard" element={<RFPWizard />} />
                     <Route path="/rfp-tracker" element={<RFPTracker />} />
+                    <Route path="/workflows" element={<WorkflowDashboard />} />
                     <Route path="/audit-trail" element={<AuditTrail />} />
                     <Route path="/settings" element={<Settings />} />
                     {/* Dynamic supplier routes */}
@@ -76,6 +78,12 @@ function App() {
                   <Route path="/rfp-tracker" element={
                     <AgenticInterface 
                       context="tracker"
+                      contextData={{}}
+                    />
+                  } />
+                  <Route path="/workflows" element={
+                    <AgenticInterface 
+                      context="compliance"
                       contextData={{}}
                     />
                   } />

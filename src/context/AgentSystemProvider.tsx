@@ -1,9 +1,6 @@
 import React, { createContext, useContext, ReactNode, useEffect, useState } from 'react';
 import { AgentRegistry } from '../agents/registry/AgentRegistry';
 import { AgentOrchestrator } from '../agents/orchestration/AgentOrchestrator';
-import { ComplianceMonitorAgent } from '../agents/implementations/ComplianceMonitorAgent';
-import { RiskPredictorAgent } from '../agents/implementations/RiskPredictorAgent';
-import { DocumentIntelligenceAgent } from '../agents/implementations/DocumentIntelligenceAgent';
 import {
   AgentConfig,
   AgentId,

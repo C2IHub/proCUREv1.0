@@ -131,6 +131,7 @@ export class WorkflowEngine {
           messages: [],
           topics: [],
           sentiment: { score: 0, label: 'neutral' },
+          sentiment: { score: 0, label: 'neutral' },
           keyInsights: []
         },
         artifacts: new Map(),
@@ -521,45 +522,3 @@ class EventDrivenWorkflowStrategy extends WorkflowStrategy {
     console.log(`Event: ${event} for step ${stepId}`, data);
   }
 }
-
-// Supporting interfaces
-interface LogEntry {
-  timestamp: Date;
-  level: 'debug' | 'info' | 'warn' | 'error';
-  message: string;
-  data?: any;
-}
-
-interface ExecutionTimeline {
-  startTime: Date;
-  endTime?: Date;
-  estimatedDuration: number;
-  milestones: Milestone[];
-}
-
-interface Milestone {
-  name: string;
-  timestamp: Date;
-  description: string;
-}
-
-interface WorkflowCost {
-  totalCost: number;
-  stepCosts: Map<string, number>;
-  currency: string;
-}
-
-interface ResourceUtilization {
-  avgCpuPercent: number;
-  avgMemoryMB: number;
-  peakMemoryMB: number;
-}
-
-interface Bottleneck {
-  stepId: string;
-  type: 'cpu' | 'memory' | 'network' | 'agent';
-  severity: 'low' | 'medium' | 'high';
-  description: string;
-}
-
-export { WorkflowEngine };
