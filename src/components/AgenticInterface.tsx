@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { MessageSquare, Send, Sparkles, Brain, Loader, X, Minimize2, Maximize2 } from 'lucide-react';
 import { useComplianceAgent, useRiskAgent, useDocumentAgent } from '../context/BedrockAgentProvider';
 
@@ -25,10 +26,20 @@ export default function AgenticInterface({
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const complianceAgent = useComplianceAgent();
   const riskAgent = useRiskAgent();
   const documentAgent = useDocumentAgent();
+
+  // Auto-scroll to bottom when new messages are added
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   // Default suggested questions based on context
   const defaultSuggestedQuestions = {
@@ -203,7 +214,7 @@ export default function AgenticInterface({
                 <Brain className="h-5 w-5 text-purple-600" />
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-gray-900">AI Assistant</h3>
+                <h3 className="text-lg font-semibold text-gray-900">proCURE AI Assistant</h3>
                 <div className="flex items-center text-sm text-purple-600">
                   <Sparkles className="h-3 w-3 mr-1" />
                   <span>Always here to help</span>
@@ -252,7 +263,11 @@ export default function AgenticInterface({
           </div>
 
           {/* Chat Messages */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-4" style={{ height: 'calc(100vh - 280px)' }}>
+          <div 
+            className="flex-1 overflow-y-auto p-4 space-y-4" 
+            style={{ height: 'calc(100vh - 320px)', maxHeight: '400px' }}
+            id="messages-container"
+          >
             {messages.length === 0 && (
               <div className="text-center py-8">
                 <Brain className="h-12 w-12 text-purple-300 mx-auto mb-3" />
@@ -282,6 +297,7 @@ export default function AgenticInterface({
                 </div>
               </div>
             ))}
+            <div ref={messagesEndRef} />
           </div>
 
           {/* Input Area */}
@@ -321,7 +337,7 @@ export default function AgenticInterface({
       {isMinimized && (
         <div className="p-4 text-center">
           <Brain className="h-8 w-8 text-purple-600 mx-auto mb-2" />
-          <p className="text-xs text-gray-500 transform -rotate-90 whitespace-nowrap">AI Assistant</p>
+          <p className="text-xs text-gray-500 transform -rotate-90 whitespace-nowrap">proCURE AI</p>
         </div>
       )}
     </div>
