@@ -6,7 +6,9 @@ import AgenticInterface from '../components/AgenticInterface';
 
 export default function SupplierPortal() {
   const { id: supplierId } = useParams<{ id: string }>();
+  console.log('SupplierPortal - supplierId from params:', supplierId);
   const { data: supplier, isLoading, error } = useSupplier(supplierId || '');
+  console.log('SupplierPortal - supplier data:', supplier, 'loading:', isLoading, 'error:', error);
   const [activeTab, setActiveTab] = useState('dashboard');
   const [uploadProgress, setUploadProgress] = useState(0);
 

@@ -101,6 +101,7 @@ const SupplierTracker: React.FC = () => {
   };
   const handleViewPortal = () => {
     if (selectedSupplier) {
+      console.log('Navigating to portal for supplier:', selectedSupplier);
       navigate(`/supplier/${selectedSupplier}/portal`);
     }
   };

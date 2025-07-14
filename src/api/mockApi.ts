@@ -368,12 +368,15 @@ export const supplierApi = {
 
   async getSupplier(id: string): Promise<ApiResponse<Supplier>> {
     await delay(300);
+    console.log('API getSupplier called with id:', id);
     // First try to find in mockSuppliers, then try to find by mapping from master suppliers
     let supplier = mockSuppliers.find(s => s.id === id);
+    console.log('Found in mockSuppliers:', supplier);
     
     // If not found in mockSuppliers, try to create from master supplier data
     if (!supplier) {
       const masterSupplier = getSupplierById(id);
+      console.log('Found in masterSuppliers:', masterSupplier);
       if (masterSupplier) {
         const complianceScore = calculateComplianceScore(masterSupplier.id);
         const riskScore = calculateRiskScore(masterSupplier.id);
