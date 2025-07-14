@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import React, { useState, useRef, useEffect } from 'react';
 import { MessageSquare, Send, Sparkles, Brain, Loader, X, Minimize2, Maximize2 } from 'lucide-react';
 import { useComplianceAgent, useRiskAgent, useDocumentAgent } from '../context/BedrockAgentProvider';
